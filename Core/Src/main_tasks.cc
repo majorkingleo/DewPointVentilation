@@ -15,6 +15,32 @@
 
 using namespace Tools;
 
+float taupunkt(float t, float r) {
+
+float a, b;
+
+  if (t >= 0) {
+    a = 7.5;
+    b = 237.3;
+  } else if (t < 0) {
+    a = 7.6;
+    b = 240.7;
+  }
+
+  // Sättigungsdampfdruck in hPa
+  float sdd = 6.1078 * pow(10, (a*t)/(b+t));
+
+  // Dampfdruck in hPa
+  float dd = sdd * (r/100);
+
+  // v-Parameter
+  float v = log10(dd/6.1078);
+
+  // Taupunkttemperatur (°C)
+  float tt = (b*v) / (a-v);
+  return { tt };
+}
+
 
 void main_task( TIM_HandleTypeDef * phtim1 )
 {
