@@ -12,33 +12,32 @@
 #include "SimpleOutDebug.h"
 #include <format.h>
 #include <string_utils.h>
+#include <math.h>
 
 using namespace Tools;
 
-float taupunkt(float t, float r) {
+// calculates dewpoint with magnus formular
+float dewpoint( float temp_celsius, float humidity )
+{
+	float a = 7.5;
+	float b = 237.3;
 
-float a, b;
+	if (temp_celsius < 0 ) {
+		a = 7.6;
+		b = 240.7;
+	}
 
-  if (t >= 0) {
-    a = 7.5;
-    b = 237.3;
-  } else if (t < 0) {
-    a = 7.6;
-    b = 240.7;
-  }
+	// saturation vapor pressure (hPa)
+	const float svp = 6.1078 * pow(10,( a * temp_celsius ) / ( b + temp_celsius ) );
 
-  // Sättigungsdampfdruck in hPa
-  float sdd = 6.1078 * pow(10, (a*t)/(b+t));
+	// vapor pressure (hPa)
+	const float vp = svp * ( humidity / 100.0 );
 
-  // Dampfdruck in hPa
-  float dd = sdd * (r/100);
+	const float vp_log = log10( vp / 6.1078 );
 
-  // v-Parameter
-  float v = log10(dd/6.1078);
-
-  // Taupunkttemperatur (°C)
-  float tt = (b*v) / (a-v);
-  return { tt };
+	// dewpoint temp (°C)
+	float dewpoint = ( b * vp_log ) / ( a - vp_log );
+	return dewpoint;
 }
 
 
