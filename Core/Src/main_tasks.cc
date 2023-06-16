@@ -41,7 +41,7 @@ float dewpoint( float temp_celsius, float humidity )
 }
 
 
-void main_task( TIM_HandleTypeDef * phtim1 )
+void measureInsideTask( TIM_HandleTypeDef * phtim1 )
 {
 	printf( "START INSIDE\r\n" );
 /*
@@ -102,7 +102,7 @@ void mesureOutsideTask( TIM_HandleTypeDef * phtim1 )
 			DEBUG( format( "OUTSIDE %04d %.2f° %.2f%%", x++, r.tempCelsius, r.humidity ) );
 			// printf( "%04d %f %%\r\n", x++, r.tempCelsius );
 		} else {
-			DEBUG( format( "OUTSIDE %04d %04d measure failed", x++ ) );
+			DEBUG( format( "OUTSIDE %04d measure failed", x++ ) );
 			// printf( "%04d measure failed\r\n", x++ );
 		}
 		osDelay(1000);

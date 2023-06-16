@@ -58,7 +58,7 @@ TIM_HandleTypeDef htim3;
 
 UART_HandleTypeDef huart2;
 
-osThreadId defaultTaskHandle;
+osThreadId measureInsideTHandle;
 osThreadId measureOutsideTHandle;
 /* USER CODE BEGIN PV */
 
@@ -72,7 +72,7 @@ static void MX_USART2_UART_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_TIM3_Init(void);
-void StartDefaultTask(void const * argument);
+void measureInside(void const * argument);
 void measureOutside(void const * argument);
 
 /* USER CODE BEGIN PFP */
@@ -140,12 +140,12 @@ int main(void)
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
-  /* definition and creation of defaultTask */
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 1024);
-  defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
+  /* definition and creation of measureInsideT */
+  osThreadDef(measureInsideT, measureInside, osPriorityLow, 0, 1024);
+  measureInsideTHandle = osThreadCreate(osThread(measureInsideT), NULL);
 
   /* definition and creation of measureOutsideT */
-  osThreadDef(measureOutsideT, measureOutside, osPriorityIdle, 0, 1024);
+  osThreadDef(measureOutsideT, measureOutside, osPriorityLow, 0, 1024);
   measureOutsideTHandle = osThreadCreate(osThread(measureOutsideT), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -190,7 +190,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
   RCC_OscInitStruct.PLL.PLLM = 8;
-  RCC_OscInitStruct.PLL.PLLN = 72;
+  RCC_OscInitStruct.PLL.PLLN = 84;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 7;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
@@ -416,19 +416,19 @@ PUTCHAR_PROTOTYPE
 }
 /* USER CODE END 4 */
 
-/* USER CODE BEGIN Header_StartDefaultTask */
+/* USER CODE BEGIN Header_measureInside */
 /**
-  * @brief  Function implementing the defaultTask thread.
+  * @brief  Function implementing the measureInsideT thread.
   * @param  argument: Not used
   * @retval None
   */
-/* USER CODE END Header_StartDefaultTask */
-void StartDefaultTask(void const * argument)
+/* USER CODE END Header_measureInside */
+void measureInside(void const * argument)
 {
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
 
-  main_task( &htim1 );
+  measureInsideTask( &htim1 );
   /* USER CODE END 5 */
 }
 

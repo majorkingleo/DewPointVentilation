@@ -12,7 +12,7 @@
 extern "C" {
 #endif
 
-void main_task( TIM_HandleTypeDef * phtim1 );
+void measureInsideTask( TIM_HandleTypeDef * phtim1 );
 void mesureOutsideTask( TIM_HandleTypeDef * phtim1 );
 
 
