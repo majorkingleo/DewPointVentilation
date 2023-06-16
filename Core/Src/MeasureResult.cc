@@ -48,3 +48,9 @@ float MeasureResult::dewpoint( float temp_celsius, float humidity )
 	return dewpoint;
 }
 
+MeasureResult & MeasureResult::instance()
+{
+	static MeasureResult result;
+	return result;
+}
+

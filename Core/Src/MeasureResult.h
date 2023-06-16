@@ -9,6 +9,8 @@
 #define SRC_MEASURERESULT_H_
 
 #include "dht22.h"
+#include <tuple>
+#include "CyclicArray.h"
 
 enum class WHERE
 {
@@ -35,7 +37,16 @@ public:
 				float humidity );
 	};
 
+protected:
+		typedef std::tuple<Result,Result> RESULT_DATA;
+
+		CyclicArray<RESULT_DATA,20> buffer;
+public:
+
+
 	static float dewpoint( float temp_celsius, float humidity );
+
+	static MeasureResult & instance();
 };
 
 
