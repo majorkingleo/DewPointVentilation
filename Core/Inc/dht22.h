@@ -12,7 +12,7 @@
 #include <functional>
 
 #include "stm32f4xx_hal.h"
-
+#include <limits>
 // struct GPIO_TypeDef;
 
 class DHT22
@@ -20,9 +20,19 @@ class DHT22
 public:
 	struct Result
 	{
-		float tempCelsius;
-		float tempFahrenheit;
-		float humidity;
+		float tempCelsius = std::numeric_limits<float>::infinity();
+		float tempFahrenheit = std::numeric_limits<float>::infinity();
+		float humidity = std::numeric_limits<float>::infinity();
+
+		Result() = default;
+
+		Result( float tempCelsius,
+				float tempFahrenheit,
+				float humidity )
+		: tempCelsius( tempCelsius ),
+		  tempFahrenheit( tempFahrenheit ),
+		  humidity( humidity )
+		{}
 	};
 
 protected:

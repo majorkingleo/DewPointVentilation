@@ -59,7 +59,11 @@ TIM_HandleTypeDef htim3;
 UART_HandleTypeDef huart2;
 
 osThreadId measureInsideTHandle;
+uint32_t measureInsideTBuffer[ 1024 ];
+osStaticThreadDef_t measureInsideTControlBlock;
 osThreadId measureOutsideTHandle;
+uint32_t measureOutsideTBuffer[ 1024 ];
+osStaticThreadDef_t measureOutsideTControlBlock;
 /* USER CODE BEGIN PV */
 
 
@@ -141,11 +145,11 @@ int main(void)
 
   /* Create the thread(s) */
   /* definition and creation of measureInsideT */
-  osThreadDef(measureInsideT, measureInside, osPriorityLow, 0, 1024);
+  osThreadStaticDef(measureInsideT, measureInside, osPriorityLow, 0, 1024, measureInsideTBuffer, &measureInsideTControlBlock);
   measureInsideTHandle = osThreadCreate(osThread(measureInsideT), NULL);
 
   /* definition and creation of measureOutsideT */
-  osThreadDef(measureOutsideT, measureOutside, osPriorityLow, 0, 1024);
+  osThreadStaticDef(measureOutsideT, measureOutside, osPriorityLow, 0, 1024, measureOutsideTBuffer, &measureOutsideTControlBlock);
   measureOutsideTHandle = osThreadCreate(osThread(measureOutsideT), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */

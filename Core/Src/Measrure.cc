@@ -12,9 +12,9 @@
 
 using namespace Tools;
 
-Measure::Measure( const char *name_, GPIO_TypeDef* gpioPort, uint16_t	gpioPin, TIM_HandleTypeDef & htim )
+Measure::Measure( WHERE where_, GPIO_TypeDef* gpioPort, uint16_t	gpioPin, TIM_HandleTypeDef & htim )
 : dht22( gpioPort, gpioPin, htim ),
-  name( name_ )
+  where( where_ )
 {
 
 }
@@ -30,12 +30,30 @@ void Measure::run()
 
 		if( res ) {
 			DHT22::Result r = res.value();
+			MeasureResult::Result mr( where, r );
 
-			DEBUG( format( "%s %04d %.2f° %.2f%%", name, loop_count++, r.tempCelsius, r.humidity ) );
+			DEBUG( format( "%s %04d %.2f° %.2f%% dew point: %.2f°",
+							toString(where),
+							loop_count++,
+							r.tempCelsius,
+							r.humidity,
+							mr.dewpoint ) );
 		} else {
-			DEBUG( format( "%s %04d measure failed", name, loop_count++ ) );
+			DEBUG( format( "%s %04d measure failed", toString(where), loop_count++ ) );
 		}
-		osDelay(measure_delay);
+		osDelay(measureDelay);
 	}
+}
+
+const char* Measure::toString( WHERE where )
+{
+	switch( where )
+	{
+	case WHERE::UNDEFINED: return "UNDEFINED";
+	case WHERE::INSIDE:  return "INSIDE ";
+	case WHERE::OUTSIDE: return "OUTSIDE";
+	}
+
+	return nullptr;
 }
 
