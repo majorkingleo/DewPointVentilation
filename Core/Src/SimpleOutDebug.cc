@@ -30,7 +30,7 @@ void SimpleOutDebug::add( const char *file, unsigned line, const char *function,
 			f = f.substr( pos + 1 );
 		}
 
-		printf( "%s:%u ", f.c_str(), line );
+		printf( "%s:%04u ", f.c_str(), line );
 	}
 
 	if( !prefix.empty() ) {
