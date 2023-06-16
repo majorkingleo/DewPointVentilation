@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <utf8_util.h>
 #include <stdio.h>
+#include "OsMutex.h"
 
 using namespace Tools;
 
@@ -19,6 +20,8 @@ SimpleOutDebug::SimpleOutDebug()
 
 void SimpleOutDebug::add( const char *file, unsigned line, const char *function, const std::string & s )
 {
+	OsMutex m;
+	std::lock_guard<OsMutex> lock(m);
 
 	if( print_line_and_file_info ) {
 
