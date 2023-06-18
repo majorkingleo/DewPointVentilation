@@ -1,8 +1,5 @@
 /*
- * MeasureResult.h
- *
- *  Created on: Jun 16, 2023
- *      Author: Martin Oberzalek
+ * @author Copyright (c) 2023 Martin Oberzalek
  */
 
 #ifndef SRC_MEASURERESULT_H_

@@ -1,9 +1,7 @@
 /*
- * main_tasks.cc
- *
- *  Created on: 26.04.2023
- *      Author: martin
+ * @author Copyright (c) 2023 Martin Oberzalek
  */
+
 #include "dht22.h"
 #include <main_tasks.h>
 #include <cmsis_os.h>

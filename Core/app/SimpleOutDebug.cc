@@ -1,3 +1,7 @@
+/*
+ * @author Copyright (c) 2023 Martin Oberzalek
+ */
+
 #include "SimpleOutDebug.h"
 #include <iostream>
 #include <stdlib.h>

@@ -1,9 +1,7 @@
 /*
- * OsMutex.cc
- *
- *  Created on: Jun 16, 2023
- *      Author: Martin Oberzalek
+ * @author Copyright (c) 2023 Martin Oberzalek
  */
+
 #include "OsMutex.h"
 
 OsMutex::OsMutex()

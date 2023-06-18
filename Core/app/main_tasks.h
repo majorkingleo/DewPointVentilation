@@ -1,8 +1,5 @@
 /*
- * main_tasks.h
- *
- *  Created on: 26.04.2023
- *      Author: martin
+ * @author Copyright (c) 2023 Martin Oberzalek
  */
 
 #ifndef INC_MAIN_TASKS_H_

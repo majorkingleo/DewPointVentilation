@@ -1,10 +1,6 @@
 /*
- * dht22.h
- *
- *  Created on: 25.04.2023
- *      Author: martin
+ * @author Copyright (c) 2023 Martin Oberzalek
  */
-
 #ifndef SRC_DHT22_H_
 #define SRC_DHT22_H_
 

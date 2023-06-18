@@ -1,8 +1,5 @@
 /*
- * dht22.cc
- *
- *  Created on: Apr 23, 2023
- *      Author: martin
+ * @author Copyright (c) 2023 Martin Oberzalek
  */
 #include "dht22.h"
 

@@ -1,9 +1,6 @@
 /*
- * CyclicArray.h
- *
- *  Created on: Jun 16, 2023
- *      Author: Martin Oberzalek
- *      From: https://stackoverflow.com/a/56334722
+ * @author Copyright (c) 20223 Martin Oberzalek
+ * From: https://stackoverflow.com/a/56334722
  */
 
 #ifndef SRC_CYCLICARRAY_H_

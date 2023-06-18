@@ -1,3 +1,8 @@
+/*
+ * @author Copyright (c) 2023 Martin Oberzalek
+ */
+
+
 #ifndef SIMPLE_OUTDEBUG_H_
 #define SIMPLE_OUTDEBUG_H_
 

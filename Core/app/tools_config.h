@@ -1,8 +1,5 @@
 /*
- * tools_config.h
- *
- *  Created on: 28.04.2023
- *      Author: martin
+ * @author Copyright (c) 2023 Martin Oberzalek
  */
 
 #ifndef SRC_TOOLS_CONFIG_H_

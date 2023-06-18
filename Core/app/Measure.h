@@ -1,9 +1,7 @@
 /*
- * Measure.h
- *
- *  Created on: Jun 16, 2023
- *      Author: Martin Oberzalek
+ * @author Copyright (c) 2023 Martin Oberzalek
  */
+
 
 #ifndef SRC_MEASURE_H_
 #define SRC_MEASURE_H_

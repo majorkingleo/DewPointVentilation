@@ -1,9 +1,7 @@
 /*
- * OsMutex.h
- *
- *  Created on: Jun 16, 2023
- *      Author: Martin Oberzalek
+ * @author Copyright (c) 2023 Martin Oberzalek
  */
+
 
 #ifndef SRC_OSMUTEX_H_
 #define SRC_OSMUTEX_H_
