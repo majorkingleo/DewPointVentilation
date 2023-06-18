@@ -34,6 +34,8 @@ public:
 				float tempCelsius,
 				float tempFahrenheit,
 				float humidity );
+
+		void recalcDewpoint();
 	};
 
 protected:
@@ -48,8 +50,12 @@ public:
 
 	static MeasureResult & instance();
 
+	std::optional<RESULT_DATA> getAccumulatedResult();
+
 protected:
-	Result & getLastUndefined( WHERE where );
+	template<size_t N> Result & getLastUndefined();
+	template<size_t N> void accumulate( RESULT_DATA & accumulated_data, const RESULT_DATA & data );
+	void calcAvarage( Result & accumulated_data, float valid_measures );
 };
 
 

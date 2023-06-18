@@ -4,6 +4,11 @@
 
 #include "MeasureResult.h"
 #include <math.h>
+#include <OsMutex.h>
+#include "SimpleOutDebug.h"
+#include <format.h>
+
+using namespace Tools;
 
 MeasureResult::Result::Result( WHERE where_,
 							   float tempCelsius,
@@ -12,7 +17,7 @@ MeasureResult::Result::Result( WHERE where_,
 : DHT22::Result( tempCelsius, tempFahrenheit, humidity ),
   where( where_ )
 {
-	dewpoint = MeasureResult::dewpoint( tempCelsius, tempFahrenheit );
+	recalcDewpoint();
 }
 
 MeasureResult::Result::Result( WHERE where_,
@@ -20,6 +25,11 @@ MeasureResult::Result::Result( WHERE where_,
 : Result( where_, res.tempCelsius, res.tempFahrenheit, res.humidity )
 {
 
+}
+
+void MeasureResult::Result::recalcDewpoint()
+{
+	dewpoint = MeasureResult::dewpoint( tempCelsius, tempFahrenheit );
 }
 
 // calculates dewpoint with magnus formular
@@ -54,10 +64,22 @@ MeasureResult & MeasureResult::instance()
 
 void MeasureResult::addMeasureResult( const Result & result )
 {
+	OsMutex m;
+	std::lock_guard<OsMutex> lock(m);
 
+	Result *res = nullptr;
+
+	if( result.where == WHERE::INSIDE ) {
+		res = &getLastUndefined<0>();
+	} else {
+		res = &getLastUndefined<1>();
+	}
+
+	*res = result;
 }
 
-MeasureResult::Result & MeasureResult::getLastUndefined( WHERE where )
+template<size_t N>
+MeasureResult::Result & MeasureResult::getLastUndefined()
 {
 	RESULT_DATA *res = nullptr;
 
@@ -65,13 +87,77 @@ MeasureResult::Result & MeasureResult::getLastUndefined( WHERE where )
 		buffer.push_back( RESULT_DATA() );
 		res = &buffer.front();
 	} else {
+		auto & data = buffer.at(buffer.size()-1);
 
+		if( std::get<N>( data ).where == WHERE::UNDEFINED ) {
+			return std::get<0>( data );
+		} else {
+			buffer.push_back( RESULT_DATA(), true );
+			res = &buffer.front();
+		}
 	}
 
-	if( where == WHERE::INSIDE ) {
-		return std::get<0>( *res );
-	} else {
-		return std::get<1>( *res );
+
+	return std::get<N>( *res );
+}
+
+std::optional<MeasureResult::RESULT_DATA> MeasureResult::getAccumulatedResult()
+{
+	std::optional<RESULT_DATA> ret;
+
+	CyclicArray<RESULT_DATA,10> valid_buffer;
+
+	for( auto & data : buffer ) {
+		auto & inside = std::get<0>(data);
+		auto & outside = std::get<1>(data);
+
+		if( inside.where == WHERE::INSIDE &&
+			outside.where == WHERE::OUTSIDE &&
+			inside.valid &&
+			outside.valid ) {
+			valid_buffer.push_back( data, true );
+		}
 	}
+
+	RESULT_DATA accumulated_data;
+
+	for( auto & data : valid_buffer ) {
+		accumulate<0>(accumulated_data,data);
+		accumulate<1>(accumulated_data,data);
+	}
+
+	const float valid_measures = valid_buffer.size();
+
+	if( valid_buffer.empty() ) {
+		return ret;
+	}
+
+	calcAvarage( std::get<0>(accumulated_data), valid_measures );
+	calcAvarage( std::get<1>(accumulated_data), valid_measures );
+
+	DEBUG( format( "Dewpoint inside: %.02f outside: %.02f measures: %d",
+			std::get<0>(accumulated_data).dewpoint,
+			std::get<1>(accumulated_data).dewpoint,
+			valid_measures ) );
+
+	ret = accumulated_data;
+
+	return ret;
+}
+
+template<size_t N>
+void MeasureResult::accumulate( RESULT_DATA & accumulated_data, const RESULT_DATA & data )
+{
+	std::get<N>(accumulated_data).tempCelsius += std::get<N>(data).tempCelsius;
+	std::get<N>(accumulated_data).tempFahrenheit += std::get<N>(data).tempFahrenheit;
+	std::get<N>(accumulated_data).humidity += std::get<N>(data).humidity;
+}
+
+void MeasureResult::calcAvarage( Result & accumulated_data, float valid_measures )
+{
+	accumulated_data.tempCelsius /= valid_measures;
+	accumulated_data.tempFahrenheit /= valid_measures;
+	accumulated_data.humidity /= valid_measures;
+	accumulated_data.recalcDewpoint();
 }
 

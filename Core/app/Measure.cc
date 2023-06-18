@@ -7,6 +7,7 @@
 #include "SimpleOutDebug.h"
 #include <format.h>
 #include <cmsis_os.h>
+#include <MeasureResult.h>
 
 using namespace Tools;
 
@@ -36,6 +37,8 @@ void Measure::run()
 							r.tempCelsius,
 							r.humidity,
 							mr.dewpoint ) );
+
+			MeasureResult::instance().addMeasureResult(mr);
 		} else {
 			DEBUG( format( "%s %04d measure failed", toString(where), loop_count++ ) );
 		}
