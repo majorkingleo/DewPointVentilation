@@ -25,6 +25,8 @@ public:
 		bool valid = false;
 		WHERE where = WHERE::UNDEFINED;
 
+		Result() = default;
+
 		Result( WHERE where,
 				DHT22::Result );
 
@@ -35,15 +37,19 @@ public:
 	};
 
 protected:
-		typedef std::tuple<Result,Result> RESULT_DATA;
+	typedef std::tuple<Result,Result> RESULT_DATA;
 
-		CyclicArray<RESULT_DATA,20> buffer;
+	CyclicArray<RESULT_DATA,20> buffer;
 public:
 
+	void addMeasureResult( const Result & result );
 
 	static float dewpoint( float temp_celsius, float humidity );
 
 	static MeasureResult & instance();
+
+protected:
+	Result & getLastUndefined( WHERE where );
 };
 
 

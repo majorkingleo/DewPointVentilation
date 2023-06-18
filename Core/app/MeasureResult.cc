@@ -52,3 +52,26 @@ MeasureResult & MeasureResult::instance()
 	return result;
 }
 
+void MeasureResult::addMeasureResult( const Result & result )
+{
+
+}
+
+MeasureResult::Result & MeasureResult::getLastUndefined( WHERE where )
+{
+	RESULT_DATA *res = nullptr;
+
+	if( buffer.empty() ) {
+		buffer.push_back( RESULT_DATA() );
+		res = &buffer.front();
+	} else {
+
+	}
+
+	if( where == WHERE::INSIDE ) {
+		return std::get<0>( *res );
+	} else {
+		return std::get<1>( *res );
+	}
+}
+
