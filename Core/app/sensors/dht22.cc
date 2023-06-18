@@ -50,7 +50,8 @@ bool DHT22::start()
 
 uint8_t DHT22::read()
 {
-  uint8_t x,y;
+  uint8_t x = 0;
+  uint8_t y = 0;
   for (x=0;x<8;x++)
   {
 	uint32_t pMillis = HAL_GetTick();
