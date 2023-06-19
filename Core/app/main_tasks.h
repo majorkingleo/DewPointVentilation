@@ -11,6 +11,7 @@ extern "C" {
 
 void measureInsideTask( TIM_HandleTypeDef * phtim1 );
 void mesureOutsideTask( TIM_HandleTypeDef * phtim1 );
+void calculateResultsTask();
 
 
 #ifdef __cplusplus

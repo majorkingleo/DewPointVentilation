@@ -4,7 +4,6 @@
 
 #include "MeasureResult.h"
 #include <math.h>
-#include <OsMutex.h>
 #include "SimpleOutDebug.h"
 #include <format.h>
 
@@ -64,8 +63,7 @@ MeasureResult & MeasureResult::instance()
 
 void MeasureResult::addMeasureResult( const Result & result )
 {
-	OsMutex m;
-	std::lock_guard<OsMutex> lock(m);
+	std::lock_guard<OsMutex> lock(m_buffer);
 
 	Result *res = nullptr;
 
@@ -104,20 +102,30 @@ MeasureResult::Result & MeasureResult::getLastUndefined()
 std::optional<MeasureResult::RESULT_DATA> MeasureResult::getAccumulatedResult()
 {
 	std::optional<RESULT_DATA> ret;
-
 	CyclicArray<RESULT_DATA,10> valid_buffer;
 
-	for( auto & data : buffer ) {
-		auto & inside = std::get<0>(data);
-		auto & outside = std::get<1>(data);
+	{
+		std::lock_guard<OsMutex> lock(m_buffer);
 
-		if( inside.where == WHERE::INSIDE &&
-			outside.where == WHERE::OUTSIDE &&
-			inside.valid &&
-			outside.valid ) {
-			valid_buffer.push_back( data, true );
+		for( auto & data : buffer ) {
+			auto & inside = std::get<0>(data);
+			auto & outside = std::get<1>(data);
+
+			if( inside.where == WHERE::INSIDE &&
+					outside.where == WHERE::OUTSIDE &&
+					inside.valid &&
+					outside.valid ) {
+				valid_buffer.push_back( data, true );
+			}
 		}
 	}
+
+	if( valid_buffer.empty() ) {
+		DEBUG( "valid data buffer is empty");
+		return ret;
+	}
+
+	DEBUG( format("valid data buffer size: %d", valid_buffer.size()) );
 
 	RESULT_DATA accumulated_data;
 
@@ -127,10 +135,6 @@ std::optional<MeasureResult::RESULT_DATA> MeasureResult::getAccumulatedResult()
 	}
 
 	const float valid_measures = valid_buffer.size();
-
-	if( valid_buffer.empty() ) {
-		return ret;
-	}
 
 	calcAvarage( std::get<0>(accumulated_data), valid_measures );
 	calcAvarage( std::get<1>(accumulated_data), valid_measures );

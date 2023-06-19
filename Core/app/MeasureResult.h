@@ -8,6 +8,7 @@
 #include "dht22.h"
 #include <tuple>
 #include "CyclicArray.h"
+#include <OsMutex.h>
 
 enum class WHERE
 {
@@ -42,6 +43,7 @@ protected:
 	typedef std::tuple<Result,Result> RESULT_DATA;
 
 	CyclicArray<RESULT_DATA,20> buffer;
+	OsMutex 					m_buffer;
 public:
 
 	void addMeasureResult( const Result & result );

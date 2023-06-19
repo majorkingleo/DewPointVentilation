@@ -11,6 +11,7 @@
 #include <format.h>
 #include <string_utils.h>
 #include "Measure.h"
+#include "MeasureResult.h"
 
 using namespace Tools;
 
@@ -28,4 +29,19 @@ void mesureOutsideTask( TIM_HandleTypeDef * phtim1 )
 {
 	Measure task( WHERE::OUTSIDE, GPIO_DHT22_OUTSIDE_GPIO_Port, GPIO_DHT22_OUTSIDE_Pin, *phtim1 );
 	task.run();
+}
+
+void calculateResultsTask()
+{
+	auto & mr = MeasureResult::instance();
+
+	do {
+		try {
+			osDelay(10000);
+			DEBUG( __FUNCTION__ );
+			mr.getAccumulatedResult();
+		} catch( const std::exception & error ) {
+			DEBUG( format( "Error: %s", error.what() ));
+		}
+	} while( true );
 }
