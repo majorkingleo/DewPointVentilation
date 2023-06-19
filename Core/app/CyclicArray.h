@@ -33,11 +33,9 @@ class CyclicArray {
 		pos( pos_ )
 	  {}
 
-	  bool operator!=( const iterator & other_it ) {
-		  if( data == other_it.data ) {
-			  if( pos == other_it.pos ) {
-				  return false;
-			  }
+	  bool operator!=( const iterator & other_it ) const {
+		  if( pos == other_it.pos ) {
+			  return false;
 		  }
 
 		  return true;
@@ -111,7 +109,7 @@ class CyclicArray {
   }
 
   bool empty() const {
-	 return size() == 0;
+	 return (size() == 0);
   }
 
   const_reference operator[]( size_t n ) const {
@@ -124,14 +122,14 @@ class CyclicArray {
 
   reference at( size_t pos ) {
 	  if (pos >= size()) {
-		  throw std::out_of_range( std::to_string(pos) + " is out of range" );
+		  throw std::out_of_range("out of range");
 	  }
 	  return array_[(front_+pos)%N];
   }
 
   const_reference at( size_t pos ) const {
 	  if (pos >= size()) {
-		  throw std::out_of_range();
+		  throw std::out_of_range("out of range");
 	  }
 	  return array_[(front_+pos)%N];
   }
@@ -141,7 +139,7 @@ class CyclicArray {
   }
 
   iterator end() {
-	  return iterator(this,npos);
+	  return iterator(this,size_);
   }
 
  private:
