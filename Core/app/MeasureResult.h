@@ -22,7 +22,7 @@ class MeasureResult
 public:
 	struct Result : public DHT22::Result
 	{
-		float dewpoint = 0;
+		float dewpoint = std::numeric_limits<float>::infinity();;
 		bool valid = false;
 		WHERE where = WHERE::UNDEFINED;
 

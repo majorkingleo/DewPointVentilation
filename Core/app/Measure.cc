@@ -31,12 +31,13 @@ void Measure::run()
 			DHT22::Result r = res.value();
 			MeasureResult::Result mr( where, r );
 
-			DEBUG( format( "%s %04d %.2f° %.2f%% dew point: %.2f°",
+			DEBUG( format( "%s %04d %.2f° %.2f%% dew point: %.2f° %s",
 							toString(where),
 							loop_count++,
 							r.tempCelsius,
 							r.humidity,
-							mr.dewpoint ) );
+							mr.dewpoint,
+							mr.valid ? "(valid)" : "") );
 
 			MeasureResult::instance().addMeasureResult(mr);
 		} else {

@@ -38,7 +38,7 @@ void calculateResultsTask()
 	do {
 		try {
 			osDelay(10000);
-			DEBUG( __FUNCTION__ );
+			// DEBUG( __FUNCTION__ );
 			mr.getAccumulatedResult();
 		} catch( const std::exception & error ) {
 			DEBUG( format( "Error: %s", error.what() ));

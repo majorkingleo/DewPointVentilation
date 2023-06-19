@@ -64,6 +64,9 @@ osStaticThreadDef_t measureInsideTControlBlock;
 osThreadId measureOutsideTHandle;
 uint32_t measureOutsideTBuffer[ 1024 ];
 osStaticThreadDef_t measureOutsideTControlBlock;
+osThreadId calculateResultHandle;
+uint32_t calculateResultBuffer[ 8024 ];
+osStaticThreadDef_t calculateResultControlBlock;
 /* USER CODE BEGIN PV */
 
 
@@ -78,6 +81,7 @@ static void MX_I2C1_Init(void);
 static void MX_TIM3_Init(void);
 void measureInside(void const * argument);
 void measureOutside(void const * argument);
+void calculateResults(void const * argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -151,6 +155,10 @@ int main(void)
   /* definition and creation of measureOutsideT */
   osThreadStaticDef(measureOutsideT, measureOutside, osPriorityLow, 0, 1024, measureOutsideTBuffer, &measureOutsideTControlBlock);
   measureOutsideTHandle = osThreadCreate(osThread(measureOutsideT), NULL);
+
+  /* definition and creation of calculateResult */
+  osThreadStaticDef(calculateResult, calculateResults, osPriorityIdle, 0, 8024, calculateResultBuffer, &calculateResultControlBlock);
+  calculateResultHandle = osThreadCreate(osThread(calculateResult), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -449,6 +457,24 @@ void measureOutside(void const * argument)
   /* Infinite loop */
   mesureOutsideTask( &htim3 );
   /* USER CODE END measureOutside */
+}
+
+/* USER CODE BEGIN Header_calculateResults */
+/**
+* @brief Function implementing the calculateResult thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_calculateResults */
+void calculateResults(void const * argument)
+{
+  /* USER CODE BEGIN calculateResults */
+  /* Infinite loop */
+  for(;;)
+  {
+	  calculateResultsTask();
+  }
+  /* USER CODE END calculateResults */
 }
 
 /**

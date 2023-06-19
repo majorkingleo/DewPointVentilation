@@ -6,8 +6,11 @@
 #include <math.h>
 #include "SimpleOutDebug.h"
 #include <format.h>
+#include "Measure.h"
 
 using namespace Tools;
+
+static MeasureResult::Result ZERO = { WHERE::UNDEFINED, 0.0, 0.0, 0.0 };
 
 MeasureResult::Result::Result( WHERE where_,
 							   float tempCelsius,
@@ -28,7 +31,19 @@ MeasureResult::Result::Result( WHERE where_,
 
 void MeasureResult::Result::recalcDewpoint()
 {
-	dewpoint = MeasureResult::dewpoint( tempCelsius, tempFahrenheit );
+	 constexpr auto inf = std::numeric_limits<float>::infinity();
+
+	 if( tempCelsius != inf &&
+		 humidity != inf ) {
+
+		 dewpoint = MeasureResult::dewpoint( tempCelsius, humidity );
+
+		 if( dewpoint != inf ) {
+			 valid = true;
+		 }
+	 } else {
+		 valid = false;
+	 }
 }
 
 // calculates dewpoint with magnus formular
@@ -74,6 +89,7 @@ void MeasureResult::addMeasureResult( const Result & result )
 	}
 
 	*res = result;
+	// res->recalcDewpoint();
 }
 
 template<size_t N>
@@ -88,7 +104,7 @@ MeasureResult::Result & MeasureResult::getLastUndefined()
 		auto & data = buffer.at(buffer.size()-1);
 
 		if( std::get<N>( data ).where == WHERE::UNDEFINED ) {
-			return std::get<0>( data );
+			return std::get<N>( data );
 		} else {
 			buffer.push_back( RESULT_DATA(), true );
 			res = &buffer.front();
@@ -111,6 +127,14 @@ std::optional<MeasureResult::RESULT_DATA> MeasureResult::getAccumulatedResult()
 			auto & inside = std::get<0>(data);
 			auto & outside = std::get<1>(data);
 
+			/*
+			DEBUG( format( "%d inside: %s outside: %s %s %s",
+					i++,
+					Measure::toString(inside.where),
+					Measure::toString(outside.where),
+					inside.valid ? "v" : "n",
+					outside.valid ? "v" : "n"));
+			*/
 			if( inside.where == WHERE::INSIDE &&
 					outside.where == WHERE::OUTSIDE &&
 					inside.valid &&
@@ -125,9 +149,9 @@ std::optional<MeasureResult::RESULT_DATA> MeasureResult::getAccumulatedResult()
 		return ret;
 	}
 
-	DEBUG( format("valid data buffer size: %d", valid_buffer.size()) );
+	// DEBUG( format("valid data buffer size: %d", valid_buffer.size()) );
 
-	RESULT_DATA accumulated_data;
+	RESULT_DATA accumulated_data = std::make_tuple( ZERO, ZERO );
 
 	for( auto & data : valid_buffer ) {
 		accumulate<0>(accumulated_data,data);
@@ -142,7 +166,7 @@ std::optional<MeasureResult::RESULT_DATA> MeasureResult::getAccumulatedResult()
 	DEBUG( format( "Dewpoint inside: %.02f outside: %.02f measures: %d",
 			std::get<0>(accumulated_data).dewpoint,
 			std::get<1>(accumulated_data).dewpoint,
-			valid_measures ) );
+			static_cast<int>(valid_measures) ) );
 
 	ret = accumulated_data;
 
