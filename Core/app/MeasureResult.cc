@@ -46,6 +46,12 @@ void MeasureResult::Result::recalcDewpoint()
 	 }
 }
 
+MeasureResult::MeasureResult()
+: show_diff( true )
+{
+
+}
+
 // calculates dewpoint with magnus formular
 float MeasureResult::dewpoint( float temp_celsius, float humidity )
 {
@@ -163,7 +169,13 @@ std::optional<MeasureResult::RESULT_DATA> MeasureResult::getAccumulatedResult()
 	calcAvarage( std::get<0>(accumulated_data), valid_measures );
 	calcAvarage( std::get<1>(accumulated_data), valid_measures );
 
-	DEBUG( format( "Dewpoint inside: %.02f outside: %.02f measures: %d",
+	if( show_diff ) {
+		DEBUG( format( "Difference in °C between both sensors: %0.2f°",
+				std::get<0>(accumulated_data).tempCelsius -
+				std::get<1>(accumulated_data).tempCelsius ) );
+	}
+
+	DEBUG( format( "Accumulated dewpoint inside: %.02f outside: %.02f measures: %d",
 			std::get<0>(accumulated_data).dewpoint,
 			std::get<1>(accumulated_data).dewpoint,
 			static_cast<int>(valid_measures) ) );

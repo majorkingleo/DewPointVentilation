@@ -44,7 +44,10 @@ protected:
 
 	CyclicArray<RESULT_DATA,20> buffer;
 	OsMutex 					m_buffer;
+	bool						show_diff; // show difference in temp °C for calibration
+
 public:
+	MeasureResult();
 
 	void addMeasureResult( const Result & result );
 
