@@ -65,7 +65,7 @@ osThreadId measureOutsideTHandle;
 uint32_t measureOutsideTBuffer[ 1024 ];
 osStaticThreadDef_t measureOutsideTControlBlock;
 osThreadId calculateResultHandle;
-uint32_t calculateResultBuffer[ 8024 ];
+uint32_t calculateResultBuffer[ 1024 ];
 osStaticThreadDef_t calculateResultControlBlock;
 /* USER CODE BEGIN PV */
 
@@ -157,7 +157,7 @@ int main(void)
   measureOutsideTHandle = osThreadCreate(osThread(measureOutsideT), NULL);
 
   /* definition and creation of calculateResult */
-  osThreadStaticDef(calculateResult, calculateResults, osPriorityIdle, 0, 8024, calculateResultBuffer, &calculateResultControlBlock);
+  osThreadStaticDef(calculateResult, calculateResults, osPriorityIdle, 0, 1024, calculateResultBuffer, &calculateResultControlBlock);
   calculateResultHandle = osThreadCreate(osThread(calculateResult), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -366,7 +366,7 @@ static void MX_USART2_UART_Init(void)
 
   /* USER CODE END USART2_Init 1 */
   huart2.Instance = USART2;
-  huart2.Init.BaudRate = 9600;
+  huart2.Init.BaudRate = 115200;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;
