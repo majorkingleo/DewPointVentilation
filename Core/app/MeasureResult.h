@@ -9,6 +9,7 @@
 #include <tuple>
 #include "CyclicArray.h"
 #include <OsMutex.h>
+#include <chrono>
 
 enum class WHERE
 {
@@ -25,6 +26,8 @@ public:
 		float dewpoint = std::numeric_limits<float>::infinity();;
 		bool valid = false;
 		WHERE where = WHERE::UNDEFINED;
+		std::chrono::time_point<std::chrono::steady_clock> measure_time_point = {};
+		static constexpr std::chrono::time_point<std::chrono::steady_clock> measure_time_point_default = {};
 
 		Result() = default;
 

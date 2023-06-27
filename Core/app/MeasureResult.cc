@@ -9,6 +9,8 @@
 #include "Measure.h"
 
 using namespace Tools;
+using namespace std::chrono_literals;
+using namespace std::chrono;
 
 static MeasureResult::Result ZERO = { WHERE::UNDEFINED, 0.0, 0.0, 0.0 };
 
@@ -17,8 +19,10 @@ MeasureResult::Result::Result( WHERE where_,
 							   float tempFahrenheit,
 							   float humidity )
 : DHT22::Result( tempCelsius, tempFahrenheit, humidity ),
-  where( where_ )
+  where( where_ ),
+  measure_time_point(std::chrono::steady_clock::now())
 {
+
 	recalcDewpoint();
 }
 
@@ -42,6 +46,10 @@ void MeasureResult::Result::recalcDewpoint()
 			 valid = true;
 		 }
 	 } else {
+		 valid = false;
+	 }
+
+	 if( measure_time_point == measure_time_point_default ) {
 		 valid = false;
 	 }
 }
@@ -126,6 +134,9 @@ std::optional<MeasureResult::RESULT_DATA> MeasureResult::getAccumulatedResult()
 	std::optional<RESULT_DATA> ret;
 	CyclicArray<RESULT_DATA,10> valid_buffer;
 
+	auto results_not_older_than = std::chrono::steady_clock::now() - 5s; //10min;
+	auto max_age = results_not_older_than.time_since_epoch().count();
+
 	{
 		std::lock_guard<OsMutex> lock(m_buffer);
 
@@ -133,19 +144,29 @@ std::optional<MeasureResult::RESULT_DATA> MeasureResult::getAccumulatedResult()
 			auto & inside = std::get<0>(data);
 			auto & outside = std::get<1>(data);
 
-			/*
-			DEBUG( format( "%d inside: %s outside: %s %s %s",
-					i++,
+			auto itp = inside.measure_time_point.time_since_epoch().count();
+			auto otp = outside.measure_time_point.time_since_epoch().count();
+
+			itp -= max_age;
+			otp -= max_age;
+
+			DEBUG( format( "inside: %s outside: %s %s %s time: %s",
 					Measure::toString(inside.where),
 					Measure::toString(outside.where),
 					inside.valid ? "v" : "n",
-					outside.valid ? "v" : "n"));
-			*/
+					outside.valid ? "v" : "n",
+							max_age  ) );
+
 			if( inside.where == WHERE::INSIDE &&
 					outside.where == WHERE::OUTSIDE &&
 					inside.valid &&
 					outside.valid ) {
-				valid_buffer.push_back( data, true );
+
+				if( inside.measure_time_point >= results_not_older_than &&
+					outside.measure_time_point >= results_not_older_than ) {
+
+					valid_buffer.push_back( data, true );
+				}
 			}
 		}
 	}
