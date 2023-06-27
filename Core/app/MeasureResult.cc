@@ -20,7 +20,7 @@ MeasureResult::Result::Result( WHERE where_,
 							   float humidity )
 : DHT22::Result( tempCelsius, tempFahrenheit, humidity ),
   where( where_ ),
-  measure_time_point(std::chrono::steady_clock::now())
+  measure_time_point(clock::now())
 {
 
 	recalcDewpoint();
@@ -79,7 +79,7 @@ float MeasureResult::dewpoint( float temp_celsius, float humidity )
 
 	const float vp_log = log10( vp / 6.1078 );
 
-	// dewpoint temp (°C)
+	// dewpoint temp (ï¿½C)
 	float dewpoint = ( b * vp_log ) / ( a - vp_log );
 	return dewpoint;
 }
@@ -134,8 +134,7 @@ std::optional<MeasureResult::RESULT_DATA> MeasureResult::getAccumulatedResult()
 	std::optional<RESULT_DATA> ret;
 	CyclicArray<RESULT_DATA,10> valid_buffer;
 
-	auto results_not_older_than = std::chrono::steady_clock::now() - 5s; //10min;
-	auto max_age = results_not_older_than.time_since_epoch().count();
+	const auto results_not_older_than = Result::clock::now() - 10min;
 
 	{
 		std::lock_guard<OsMutex> lock(m_buffer);
@@ -144,18 +143,13 @@ std::optional<MeasureResult::RESULT_DATA> MeasureResult::getAccumulatedResult()
 			auto & inside = std::get<0>(data);
 			auto & outside = std::get<1>(data);
 
-			auto itp = inside.measure_time_point.time_since_epoch().count();
-			auto otp = outside.measure_time_point.time_since_epoch().count();
-
-			itp -= max_age;
-			otp -= max_age;
-
-			DEBUG( format( "inside: %s outside: %s %s %s time: %s",
+			/*
+			DEBUG( format( "inside: %s outside: %s %s %s",
 					Measure::toString(inside.where),
 					Measure::toString(outside.where),
 					inside.valid ? "v" : "n",
-					outside.valid ? "v" : "n",
-							max_age  ) );
+					outside.valid ? "v" : "n" ) );
+			*/
 
 			if( inside.where == WHERE::INSIDE &&
 					outside.where == WHERE::OUTSIDE &&
@@ -164,6 +158,13 @@ std::optional<MeasureResult::RESULT_DATA> MeasureResult::getAccumulatedResult()
 
 				if( inside.measure_time_point >= results_not_older_than &&
 					outside.measure_time_point >= results_not_older_than ) {
+
+					/*
+					auto diff = inside.measure_time_point - results_not_older_than;
+					auto diff_in_sec = std::chrono::duration_cast<std::chrono::seconds>(diff).count();
+
+					DEBUG( format( "diff: %d", diff_in_sec ) );
+					*/
 
 					valid_buffer.push_back( data, true );
 				}

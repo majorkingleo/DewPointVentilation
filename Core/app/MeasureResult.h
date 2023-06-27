@@ -9,7 +9,7 @@
 #include <tuple>
 #include "CyclicArray.h"
 #include <OsMutex.h>
-#include <chrono>
+#include <SysClock.h>
 
 enum class WHERE
 {
@@ -23,11 +23,13 @@ class MeasureResult
 public:
 	struct Result : public DHT22::Result
 	{
+		using clock = SysClockSecondsSinceStart;
+
 		float dewpoint = std::numeric_limits<float>::infinity();;
 		bool valid = false;
 		WHERE where = WHERE::UNDEFINED;
-		std::chrono::time_point<std::chrono::steady_clock> measure_time_point = {};
-		static constexpr std::chrono::time_point<std::chrono::steady_clock> measure_time_point_default = {};
+		std::chrono::time_point<clock> measure_time_point = {};
+		static constexpr std::chrono::time_point<clock> measure_time_point_default = {};
 
 		Result() = default;
 
