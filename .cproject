@@ -96,6 +96,7 @@
 								<option id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.linker.option.script.1157538985" name="Linker Script (-T)" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.linker.option.script" useByScannerDiscovery="false" value="${workspace_loc:/${ProjName}/STM32F401RETX_FLASH.ld}" valueType="string"/>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.linker.option.otherflags.1833130571" name="Other flags" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.linker.option.otherflags" useByScannerDiscovery="false" valueType="stringList">
 									<listOptionValue builtIn="false" value="-u _printf_float"/>
+									<listOptionValue builtIn="false" value="-ffunction-sections"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.linker.input.1425098588" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -289,9 +290,17 @@
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Debug">
+			<resource resourceType="PROJECT" workspacePath="/DHT22_2"/>
+		</configuration>
+		<configuration configurationName="Release">
+			<resource resourceType="PROJECT" workspacePath="/DHT22_2"/>
+		</configuration>
+	</storageModule>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		<scannerConfigBuildInfo instanceId="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.1564143099;com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.1564143099.;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.1522761912;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.input.cpp.433006135">
+		<scannerConfigBuildInfo instanceId="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.release.61323493;com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.release.61323493.;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.1174072637;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.943437254">
 			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.release.61323493;com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.release.61323493.;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.1845885563;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.input.cpp.1289122026">
@@ -300,16 +309,8 @@
 		<scannerConfigBuildInfo instanceId="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.1564143099;com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.1564143099.;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.527263685;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.576180597">
 			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.release.61323493;com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.release.61323493.;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.1174072637;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.943437254">
+		<scannerConfigBuildInfo instanceId="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.1564143099;com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.1564143099.;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.1522761912;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.input.cpp.433006135">
 			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
-	</storageModule>
-	<storageModule moduleId="refreshScope" versionNumber="2">
-		<configuration configurationName="Debug">
-			<resource resourceType="PROJECT" workspacePath="/DHT22_2"/>
-		</configuration>
-		<configuration configurationName="Release">
-			<resource resourceType="PROJECT" workspacePath="/DHT22_2"/>
-		</configuration>
 	</storageModule>
 </cproject>
