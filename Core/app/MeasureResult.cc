@@ -140,8 +140,8 @@ std::optional<MeasureResult::RESULT_DATA> MeasureResult::getAccumulatedResult()
 		std::lock_guard<OsMutex> lock(m_buffer);
 
 		for( auto & data : buffer ) {
-			auto & inside = std::get<0>(data);
-			auto & outside = std::get<1>(data);
+			auto & inside = std::get<RESULT_DATA_INSIDE>(data);
+			auto & outside = std::get<RESULT_DATA_OUTSIDE>(data);
 
 			/*
 			DEBUG( format( "inside: %s outside: %s %s %s",
@@ -182,24 +182,24 @@ std::optional<MeasureResult::RESULT_DATA> MeasureResult::getAccumulatedResult()
 	RESULT_DATA accumulated_data = std::make_tuple( ZERO, ZERO );
 
 	for( auto & data : valid_buffer ) {
-		accumulate<0>(accumulated_data,data);
-		accumulate<1>(accumulated_data,data);
+		accumulate<RESULT_DATA_INSIDE>(accumulated_data,data);
+		accumulate<RESULT_DATA_OUTSIDE>(accumulated_data,data);
 	}
 
 	const float valid_measures = valid_buffer.size();
 
-	calcAvarage( std::get<0>(accumulated_data), valid_measures );
-	calcAvarage( std::get<1>(accumulated_data), valid_measures );
+	calcAvarage( std::get<RESULT_DATA_INSIDE>(accumulated_data), valid_measures );
+	calcAvarage( std::get<RESULT_DATA_OUTSIDE>(accumulated_data), valid_measures );
 
 	if( show_diff ) {
-		CPPDEBUG( format( "Difference in �C between both sensors: %0.2f�",
-				std::get<0>(accumulated_data).tempCelsius -
-				std::get<1>(accumulated_data).tempCelsius ) );
+		CPPDEBUG( format( "Difference in °C between both sensors: %0.2f°",
+				std::get<RESULT_DATA_INSIDE>(accumulated_data).tempCelsius -
+				std::get<RESULT_DATA_OUTSIDE>(accumulated_data).tempCelsius ) );
 	}
 
 	CPPDEBUG( format( "Accumulated dewpoint inside: %.02f outside: %.02f measures: %d",
-			std::get<0>(accumulated_data).dewpoint,
-			std::get<1>(accumulated_data).dewpoint,
+			std::get<RESULT_DATA_INSIDE>(accumulated_data).dewpoint,
+			std::get<RESULT_DATA_OUTSIDE>(accumulated_data).dewpoint,
 			static_cast<int>(valid_measures) ) );
 
 	ret = accumulated_data;

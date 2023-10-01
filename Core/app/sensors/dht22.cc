@@ -3,9 +3,11 @@
  */
 #include "dht22.h"
 
-DHT22::DHT22( GPIO_TypeDef* gpioPort_, uint16_t gpioPin_ )
+DHT22::DHT22( GPIO_TypeDef* gpioPort_, uint16_t gpioPin_, float correction_, float humidity_correction_ )
 : gpioPort( gpioPort_ ),
-  gpioPin( gpioPin_ )
+  gpioPin( gpioPin_ ),
+  correction( correction_ ),
+  humidity_correction( humidity_correction_ )
 {
 
 }
@@ -98,15 +100,22 @@ std::optional<DHT22::Result> DHT22::mesure()
 		result.tempCelsius = (float)((tempC1<<8)|tempC2)/10;
 	}
 
+	result.tempCelsius += correction;
+
 	result.tempFahrenheit = result.tempCelsius * 9/5 + 32;
 
 	result.humidity = (float) ((hum1<<8)|hum2)/10;
+	result.humidity += humidity_correction;
 
 	return result;
 }
 
-DHT22HAL::DHT22HAL( GPIO_TypeDef* gpioPort, uint16_t gpioPin, TIM_HandleTypeDef & htim_ )
-: DHT22( gpioPort, gpioPin ),
+DHT22HAL::DHT22HAL( GPIO_TypeDef* gpioPort,
+					uint16_t gpioPin,
+					TIM_HandleTypeDef & htim_,
+					float degree_correction,
+					float humidity_correction )
+: DHT22( gpioPort, gpioPin, degree_correction, humidity_correction ),
   htim( htim_ )
 {
 

@@ -19,7 +19,9 @@ public:
 	Measure( WHERE					where,
 			 GPIO_TypeDef			*gpioPort,
 			 uint16_t				gpioPin,
-			 TIM_HandleTypeDef & 	htim );
+			 TIM_HandleTypeDef & 	htim,
+			 float 					degree_correction = 0,
+			 float 					humidity_correction = 0 );
 
 	void run();
 

@@ -11,8 +11,13 @@
 
 using namespace Tools;
 
-Measure::Measure( WHERE where_, GPIO_TypeDef* gpioPort, uint16_t	gpioPin, TIM_HandleTypeDef & htim )
-: dht22( gpioPort, gpioPin, htim ),
+Measure::Measure( WHERE where_,
+				  GPIO_TypeDef* gpioPort,
+				  uint16_t	gpioPin,
+				  TIM_HandleTypeDef & htim,
+				  float degree_correction,
+				  float humidity_correction )
+: dht22( gpioPort, gpioPin, htim, degree_correction, humidity_correction ),
   where( where_ )
 {
 
@@ -31,7 +36,7 @@ void Measure::run()
 			DHT22::Result r = res.value();
 			MeasureResult::Result mr( where, r );
 
-			CPPDEBUG( format( "%s %04d %.2f� %.2f%% dew point: %.2f� %s",
+			CPPDEBUG( format( "%s %04d %.2f° %.2f%% dew point: %.2f° %s",
 							toString(where),
 							loop_count++,
 							r.tempCelsius,

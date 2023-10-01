@@ -32,11 +32,16 @@ public:
 	};
 
 protected:
-	GPIO_TypeDef* gpioPort;
-	const uint16_t	  gpioPin;
+	GPIO_TypeDef* 	gpioPort;
+	const uint16_t	gpioPin;
+	const float 	correction;
+	const float 	humidity_correction;
 
 public:
-	DHT22( GPIO_TypeDef* gpioPort, uint16_t	gpioPin );
+	DHT22( GPIO_TypeDef* gpioPort,
+		   uint16_t	gpioPin,
+		   float degree_correction = 0 /* correction in °C */,
+		   float humidity_correction = 0 /* humidity correction */);
 	virtual ~DHT22();
 
 	bool start();
@@ -53,7 +58,11 @@ protected:
 	TIM_HandleTypeDef & htim;
 
 public:
-	DHT22HAL( GPIO_TypeDef* gpioPort, uint16_t	gpioPin, TIM_HandleTypeDef & htim );
+	DHT22HAL( GPIO_TypeDef* 	  	gpioPort,
+			  uint16_t			  	gpioPin,
+			  TIM_HandleTypeDef & 	htim,
+			  float 				degree_correction = 0 /* correction in °C */,
+			  float 				humidity_correction = 0 /* humidity correction */);
 
 	void microDelay ( uint16_t delay ) override;
 };

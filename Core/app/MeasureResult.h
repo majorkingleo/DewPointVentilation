@@ -44,12 +44,17 @@ public:
 		void recalcDewpoint();
 	};
 
-protected:
+	enum RESULT_DATA_TUPLE_IDX {
+		RESULT_DATA_INSIDE = 0,
+		RESULT_DATA_OUTSIDE,
+	};
+
 	typedef std::tuple<Result,Result> RESULT_DATA;
 
+protected:
 	CyclicArray<RESULT_DATA,20> buffer;
 	OsMutex 					m_buffer;
-	bool						show_diff; // show difference in temp °C for calibration
+	bool						show_diff; // show difference in temp ï¿½C for calibration
 
 public:
 	MeasureResult();
