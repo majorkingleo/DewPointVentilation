@@ -173,7 +173,7 @@ std::optional<MeasureResult::RESULT_DATA> MeasureResult::getAccumulatedResult()
 	}
 
 	if( valid_buffer.empty() ) {
-		DEBUG( "valid data buffer is empty");
+		CPPDEBUG( "valid data buffer is empty");
 		return ret;
 	}
 
@@ -192,12 +192,12 @@ std::optional<MeasureResult::RESULT_DATA> MeasureResult::getAccumulatedResult()
 	calcAvarage( std::get<1>(accumulated_data), valid_measures );
 
 	if( show_diff ) {
-		DEBUG( format( "Difference in °C between both sensors: %0.2f°",
+		CPPDEBUG( format( "Difference in ï¿½C between both sensors: %0.2fï¿½",
 				std::get<0>(accumulated_data).tempCelsius -
 				std::get<1>(accumulated_data).tempCelsius ) );
 	}
 
-	DEBUG( format( "Accumulated dewpoint inside: %.02f outside: %.02f measures: %d",
+	CPPDEBUG( format( "Accumulated dewpoint inside: %.02f outside: %.02f measures: %d",
 			std::get<0>(accumulated_data).dewpoint,
 			std::get<1>(accumulated_data).dewpoint,
 			static_cast<int>(valid_measures) ) );

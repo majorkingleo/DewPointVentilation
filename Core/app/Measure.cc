@@ -31,7 +31,7 @@ void Measure::run()
 			DHT22::Result r = res.value();
 			MeasureResult::Result mr( where, r );
 
-			DEBUG( format( "%s %04d %.2f° %.2f%% dew point: %.2f° %s",
+			CPPDEBUG( format( "%s %04d %.2fï¿½ %.2f%% dew point: %.2fï¿½ %s",
 							toString(where),
 							loop_count++,
 							r.tempCelsius,
@@ -41,7 +41,7 @@ void Measure::run()
 
 			MeasureResult::instance().addMeasureResult(mr);
 		} else {
-			DEBUG( format( "%s %04d measure failed", toString(where), loop_count++ ) );
+			CPPDEBUG( format( "%s %04d measure failed", toString(where), loop_count++ ) );
 		}
 		osDelay(measureDelay);
 	}
